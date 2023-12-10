@@ -1,0 +1,32 @@
+1. Using the CLI, create new identity pool, named DynamoPool, allow unauthenticated identities to access our DynamoDB table. 
+    aws cognito-identity create-identity-pool \
+    --identity-pool-name DynamoPool \
+    --allow-unauthenticated-identities \
+    --output json
+2. Create an IAM role named Cognito_DynamoPoolUnauth. This is the role that will be assumed by our Cognito identity pool, which will give it access to our DynamoDB. 
+aws iam create-role --role-name Cognito_DynamoPoolUnauth --assume-role-policy-document file://myCognitoPolicy.json --output json
+
+3. Grant the Cognito_DynamoPoolUnauth role read access to DynamoDB by attaching a managed policy (AmazonDynamoDBReadOnlyAccess).
+aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess --role-name Cognito_DynamoPoolUnauth
+
+4. To double check that our role has been set up correctly. 
+aws iam get-role --role-name Cognito_DynamoPoolUnauth --output json
+
+5. Add our role to the Cognito Identity Pool. Replace the pool ID with your own pool ID and use the role ARN from the previous step.
+
+aws cognito-identity set-identity-pool-roles \
+--identity-pool-id "us-east-1:0fa09c3e-03d6-4f01-9911-a103e9b5f76a" \
+--roles unauthenticated=arn:aws:iam::721944718279:role/Cognito_DynamoPoolUnauth --output json
+
+Double check it worked using: 
+aws cognito-identity get-identity-pool-roles  --identity-pool-id "us-east-1:0fa09c3e-03d6-4f01-9911-a103e9b5f76a"
+
+We can now specify the Cognito credentials in our application to be modified in the index.html
+Add this snippet to our index.html:
+
+AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+IdentityPoolId: "us-east-1:0fa09c3e-03d6-4f01-9911-a103e9b5f76a",
+RoleArn: "arn:aws:iam::721944718279:role/Cognito_DynamoPoolUnauth"
+});
+
+
