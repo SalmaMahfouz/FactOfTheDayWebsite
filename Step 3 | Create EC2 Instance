@@ -7,3 +7,23 @@ systemctl start httpd
 systemctl enable httpd
 
 3. After launching the EC2, connect to the Public IP, APACHE welcome page is expected to be viewed. 
+
+4. After Creating the Cognito Pool, configure the index.html on the EC2 instance. 
+sudo mv index.html /var/www/html
+sudo chown -R ec2-user:ec2-user /var/www/html/ 
+
+5. Install Gremlin agent
+install the following Gremlin dependency, which is a traffic control package which gremlin uses. 
+sudo yum install -y iproute-tc
+
+Download the Gremlin repo:
+sudo curl https://rpm.gremlin.com/gremlin.repo -o /etc/yum.repos.d/gremlin.repo
+
+Install Gremlin Packages:
+sudo yum install -y gremlin gremlind
+
+Start the Gremlin daemon, to initialize gremlin daemon. Which will ask to input info like the Team ID & Team Secret, which we will get from the gremlin account.
+sudo gremlin init
+
+
+
