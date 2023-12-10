@@ -1,0 +1,9 @@
+1. Create an AWS EC2 instance, AWS AMI, tier 2, SG allow (SSH & HTTP), the rest is default. 
+2. Add the below in the user data, to install httpd with the launch of the server:
+#!/bin/bash
+yum update -y
+yum install -y httpd
+systemctl start httpd
+systemctl enable httpd
+
+3. After launching the EC2, connect to the Public IP, APACHE welcome page is expected to be viewed. 
