@@ -1,0 +1,4 @@
+1. Configure our AWS CLI, as part of that is to create a new IAM user, with admin level privileges, because it will need permissions to create Cognito resources. Then we will configure the AWS CLI using the credentials of this user. 
+2. While creating the IAM user, we need to give a programmatic access. To do so, after creating the user & giving it “AdministratorAccess” permission. We need to generate access for this user. 
+3. Configure the AWS CLI: aws configure
+4. Insert the Access ID & Secret Key of the IAM User we created.
